@@ -1,38 +1,31 @@
 @extends('layout')
 @section('contend')
 <div class="col-6">
-    <h3 class="mt-3 mb-5"> Nhân viên</h3>
+    <h3 class="mt-3 mb-5">Lịch sử chấm công Nhân viên: {{ $employee->name}}</h3>
     @if(Session::has('message'))
     <p class="alert {{ Session::get('alert-class', 'alert-info') }}">{{ Session::get('message') }}</p>
     @endif
-    <select class="form-select mb-3" id="search" onchange="search()">
-        @foreach (renderDepartmenttoArray($departments->toArray()) as $key => $item)
-        <option value={{ $item['id'] }}> {!! $item['content'] !!}</option>
-        @endforeach
-    </select>
+
     <table class="table">
         <thead>
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Tên</th>
-                <th scope="col">Phòng ban</th>
+                <th scope="col">Ngày</th>
+                <th scope="col">Thời gian</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($employees as $key => $item)
+            @foreach ($employee->timekeepings as $key => $item)
             <tr>
                 <th scope="row">{{ $key + 1}}</th>
-                <td>{{ $item->name}}</td>
-                <td>{{ $item->department ? $item->department->name : ''}}</td>
+                <td>{{ $item->date}}</td>
                 <td>
-                    <form action="/timekeepings" method="POST">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                        <input type="text" hidden name="employee_id" value="{{ $item->id }}" />
-                        <button class="btn btn-success" type="submit">Điểm danh</button>
-                    </form>
+                    @foreach ($item->checked_in_at as $value)
+                    <p>{{ $value }}</p>
+                    @endforeach
                 </td>
-                <td><a class="btn btn-info" href="/employees/{{ $item->id}}">Xem</a></td>
+
             </tr>
             @endforeach
         </tbody>

@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Timekeeping;
 use App\Http\Requests\StoreTimekeepingRequest;
 use App\Http\Requests\UpdateTimekeepingRequest;
+use Illuminate\Support\Facades\Session;
 
 class TimekeepingController extends Controller
 {
+    protected $model;
+    public function __construct(Timekeeping $model)
+    {
+        $this->model = $model;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +35,22 @@ class TimekeepingController extends Controller
      */
     public function store(StoreTimekeepingRequest $request)
     {
-        //
+        $requestData = $request->all();
+        $time = $this->model->where('employee_id', $requestData['employee_id'])->where('date', date('Y-m-d'))->first();
+        if (!$time) {
+            $time = new Timekeeping([
+                'date'=> date('Y-m-d'),
+                'employee_id' => $requestData['employee_id'],
+                'checked_in_at' => array(date('H:i')),
+            ]);
+            $time->save();
+        } else {
+            $checlInTime = $time->checked_in_at;
+            $time->checked_in_at = array_merge($time->checked_in_at, [date('H:i')]);
+            $time->save();
+        }
+        Session::flash('message', 'Điểm danh thành công!');
+        return redirect()->route('employees.index');
     }
 
     /**
@@ -37,7 +58,7 @@ class TimekeepingController extends Controller
      */
     public function show(Timekeeping $timekeeping)
     {
-        //
+        
     }
 
     /**

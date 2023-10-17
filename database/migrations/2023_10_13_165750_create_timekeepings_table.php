@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('timekeepings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('employee_id')->constrained();
-            $table->datetime('checked_in_at')->nullable();
+            $table->json('checked_in_at')->nullable();
             $table->date('date')->nullable();
             $table->timestamps();
         });

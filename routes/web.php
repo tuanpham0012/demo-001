@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\TimekeepingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,10 +17,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('layout');
+    return redirect('/departments');
 });
 
 Route::get('/departments/up/{id}', [DepartmentController::class, 'moveUp']);
 Route::get('/departments/down/{id}', [DepartmentController::class, 'moveDown']);
 Route::resource('/departments', DepartmentController::class);
 Route::resource('/employees', EmployeeController::class);
+Route::resource('/timekeepings', TimekeepingController::class);
